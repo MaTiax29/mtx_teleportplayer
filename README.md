@@ -12,3 +12,5 @@ A simple script that allows you to teleport to any of the locations marked in th
 - nh-context (https://github.com/nerohiro/nh-context)
 
 # Preview
+
+- Video (https://streamable.com/d7pa6o)
