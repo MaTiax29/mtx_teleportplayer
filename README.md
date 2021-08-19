@@ -1,4 +1,4 @@
-# Mtx_teleport
+# MTX_TeleportPlayer
 
 A simple script that allows you to teleport to any of the locations marked in the config file.
 
