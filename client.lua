@@ -1,11 +1,10 @@
 ESX = nil
-local player, playerCoords = false, false
 
 -- Threads
 Citizen.CreateThread(function()
     while ESX == nil do
         TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
-        Citizen.Wait(500)
+        Citizen.Wait(0)
     end
 
     SpawnPed()
@@ -13,24 +12,17 @@ end)
 
 Citizen.CreateThread(function()
     while true do
-        player = PlayerPedId()
-        playerCoords = GetEntityCoords(player)
-        Citizen.Wait(1500)
-    end
-end)
-
-Citizen.CreateThread(function()
-    while true do
-        local sec = 1500
+        local sec = 750
+        local ped = PlayerPedId()
+        local coords = GetEntityCoords(ped)
         for k,v in pairs(Config['Settings']) do
-            local distance = #(playerCoords - vector3(v.coords.x, v.coords.y, v.coords.z))
+            local dist = Vdist(coords, vector3(v.coords.x, v.coords.y, v.coords.z))
 
-            if distance < Config['Distance'] then
+            if dist < Config['Distance'] then
                 sec = 0
                 ShowFloatingHelpNotification(Config['Locales'][Config['Locale']].Text, vector3(v.coords.x, v.coords.y, v.coords.z + 1.0))
                 if IsControlJustPressed(1, Config['Key']) then
-                    sec = 1500
-                    TriggerEvent('mtx_teleports:MenuPoints')
+                    TriggerEvent('mtx_teleportplayer:MenuPoints')
                 end
             end
         end
@@ -39,7 +31,7 @@ Citizen.CreateThread(function()
 end)
 
 -- Events
-RegisterNetEvent('mtx_teleports:MenuPoints', function()
+RegisterNetEvent('mtx_teleportplayer:MenuPoints', function()
     for k,v in pairs(Config['Points']) do
         TriggerEvent('nh-context:sendMenu', {
             {
@@ -47,7 +39,7 @@ RegisterNetEvent('mtx_teleports:MenuPoints', function()
                 header = v.label,
                 txt = v.txt,
                 params = {
-                    event = 'mtx_teleports:TeleportPlayer',
+                    event = 'mtx_teleportplayer:TeleportPlayer',
                     args = {
                         ubi = v.coords,
                         name = v.label,
@@ -58,12 +50,14 @@ RegisterNetEvent('mtx_teleports:MenuPoints', function()
     end
 end)
 
-RegisterNetEvent('mtx_teleports:TeleportPlayer')
-AddEventHandler('mtx_teleports:TeleportPlayer', function(data)
+RegisterNetEvent('mtx_teleportplayer:TeleportPlayer')
+AddEventHandler('mtx_teleportplayer:TeleportPlayer', function(data)
+
+    local ped = PlayerPedId()
 
     if data.ubi ~= nil then
         ESX.SetTimeout(Config['Cooldown'], function()
-            SetEntityCoords(player, data.ubi.x, data.ubi.y, data.ubi.z, true, true, false, false)
+            SetEntityCoords(ped, data.ubi.x, data.ubi.y, data.ubi.z, true, true, false, false)
             ShowNotification(Config['Locales'][Config['Locale']].Notify..data.name)
         end)
     end
@@ -71,7 +65,7 @@ AddEventHandler('mtx_teleports:TeleportPlayer', function(data)
 end)
 
 -- Functions
-function SpawnPed()
+SpawnPed = function()
     for k,v in pairs(Config['Settings']) do
         local PED = GetHashKey(v.model)
         RequestModel(PED)
@@ -88,15 +82,15 @@ function SpawnPed()
     end
 end
 
-function ShowFloatingHelpNotification(msg, coords)
-	AddTextEntry('esxFloatingHelpNotification', msg)
+ShowFloatingHelpNotification = function(msg, coords)
+	AddTextEntry('FloatingHelpNotification', msg)
 	SetFloatingHelpTextWorldPosition(1, coords)
 	SetFloatingHelpTextStyle(1, 1, 2, -1, 3, 0)
-	BeginTextCommandDisplayHelp('esxFloatingHelpNotification')
+	BeginTextCommandDisplayHelp('FloatingHelpNotification')
 	EndTextCommandDisplayHelp(2, false, false, -1)
 end
 
-function ShowNotification(msg)
+ShowNotification = function(msg)
     SetNotificationTextEntry('STRING')
 	AddTextComponentString(msg)
 	DrawNotification(0,1)
