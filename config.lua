@@ -2,7 +2,7 @@ Config = {}
 
 Config['Locale'] = 'en'
 
-Config['Key'] = 38 -- E
+Config['KeyPressed'] = 38 -- E
 
 Config['Distance'] = 1.5
 
