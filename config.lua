@@ -22,9 +22,9 @@ Config['Settings'] = {
 }
 
 Config['Points'] = {
-    { id = 0, label = 'Puntos Disponibles', txt = '' },
-    { id = 1, label = 'Garage', txt = 'Garage Central', coords = { x = 212.88935852051, y = -816.54449462891, z = 30.711214065552 }},
-    { id = 2, label = 'Comisaria', txt = 'Comisaria de Mission Row', coords = { x = 427.05944824219, y = -978.97210693359, z = 30.710809707642 }},
+    { id = 0, label = 'Locations Available', txt = '' },
+    { id = 1, label = 'Garage', txt = 'Central Garage', coords = { x = 212.88935852051, y = -816.54449462891, z = 30.711214065552 }},
+    { id = 2, label = 'Police Station', txt = 'Mission Row Police Station', coords = { x = 427.05944824219, y = -978.97210693359, z = 30.710809707642 }},
 }
 
 Config['Locales'] = {
