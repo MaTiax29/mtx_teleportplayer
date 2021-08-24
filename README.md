@@ -13,4 +13,4 @@ A simple script that allows you to teleport to any of the locations marked in th
 
 # Preview
 
-- Video (https://streamable.com/d7pa6o)
+- Video (https://streamable.com/t7b5cs)
