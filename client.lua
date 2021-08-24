@@ -1,12 +1,5 @@
-ESX = nil
-
 -- Threads
 Citizen.CreateThread(function()
-    while ESX == nil do
-        TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
-        Citizen.Wait(0)
-    end
-
     SpawnPed()
 end)
 
@@ -21,7 +14,7 @@ Citizen.CreateThread(function()
             if dist < Config['Distance'] then
                 sec = 0
                 ShowFloatingHelpNotification(Config['Locales'][Config['Locale']].Text, vector3(v.coords.x, v.coords.y, v.coords.z + 1.0))
-                if IsControlJustPressed(1, Config['Key']) then
+                if IsControlJustPressed(1, Config['KeyPressed']) then
                     TriggerEvent('mtx_teleportplayer:MenuPoints')
                 end
             end
@@ -56,7 +49,7 @@ AddEventHandler('mtx_teleportplayer:TeleportPlayer', function(data)
     local ped = PlayerPedId()
 
     if data.ubi ~= nil then
-        ESX.SetTimeout(Config['Cooldown'], function()
+        SetTimeout(Config['Cooldown'], function()
             SetEntityCoords(ped, data.ubi.x, data.ubi.y, data.ubi.z, true, true, false, false)
             ShowNotification(Config['Locales'][Config['Locale']].Notify..data.name)
         end)
@@ -92,6 +85,6 @@ end
 
 ShowNotification = function(msg)
     SetNotificationTextEntry('STRING')
-	AddTextComponentString(msg)
-	DrawNotification(0,1)
+    AddTextComponentString(msg)
+    DrawNotification(0,1)
 end
