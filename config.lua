@@ -6,7 +6,7 @@ Config['KeyPressed'] = 38 -- E
 
 Config['Distance'] = 1.5
 
-Config['Cooldown'] = 500 -- miliseconds
+Config['Cooldown'] = 1000 -- miliseconds
 
 Config['Settings'] = {
     {
