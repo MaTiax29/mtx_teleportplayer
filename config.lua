@@ -1,40 +1,22 @@
 Config = {}
 
-Config['Locale'] = 'en'
+Config['Distance'] = 2.0
 
-Config['KeyPressed'] = 38 -- E
-
-Config['Distance'] = 1.5
-
-Config['Cooldown'] = 1000 -- miliseconds
-
-Config['Settings'] = {
+Config['Main'] = {
     {
-        model = 'a_m_m_socenlat_01',
-        anim = 'WORLD_HUMAN_AA_SMOKE',
-        coords = { x = 214.56092834473, y = -812.6318359375, z = 30.705089569092, h = 160.39071655273 } 
+        ['Model'] = 'a_m_m_eastsa_02',
+        ['Coords'] = vec3(205.0, -852.5, 30.6),
+        ['Heading'] = 340.0
     },
     {
-        model = 'a_m_m_golfer_01',
-        anim = 'WORLD_HUMAN_AA_SMOKE',
-        coords = { x = 433.65176391602, y = -985.73608398438, z = 30.710428237915, h = 89.06812286377 } 
+        ['Model'] = 'a_m_m_socenlat_01',
+        ['Coords'] = vec3(433.6, -985.7, 30.7),
+        ['Heading'] = 90.0
     }
 }
 
-Config['Points'] = {
-    { id = 0, label = 'Locations Available', txt = '' },
-    { id = 1, label = 'Garage', txt = 'Central Garage', coords = { x = 212.88935852051, y = -816.54449462891, z = 30.711214065552 }},
-    { id = 2, label = 'Police Station', txt = 'Mission Row Police Station', coords = { x = 427.05944824219, y = -978.97210693359, z = 30.710809707642 }},
-}
-
-Config['Locales'] = {
-    ['es'] = {
-        Text = '~b~[E]~s~ | Teletransporte',
-        Notify = 'Fuiste enviado a ',
-    },
-
-    ['en'] = {
-        Text = '~b~[E]~s~ | Teleport',
-        Notify = 'You were sent to ',
-    }
+Config['Zones'] = {
+    { ['Label'] = 'Zones Available', ['Desc'] = '' },
+    { ['Label'] = 'Police Station', ['Desc'] = '', ['Coords'] = vec3(423.3, -979.4, 30.7) },
+    { ['Label'] = 'Plaza', ['Desc'] = '', ['Coords'] = vec3(204.8, -849.3, 30.6) }
 }
