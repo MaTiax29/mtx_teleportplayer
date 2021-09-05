@@ -1,90 +1,99 @@
 -- Threads
 Citizen.CreateThread(function()
-    SpawnPed()
-end)
+    local config = Config['Main']
 
-Citizen.CreateThread(function()
-    while true do
-        local sec = 750
-        local ped = PlayerPedId()
-        local coords = GetEntityCoords(ped)
-        for k,v in pairs(Config['Settings']) do
-            local dist = Vdist(coords, vector3(v.coords.x, v.coords.y, v.coords.z))
+    for i = 1, #config, 1 do
+        local Part = i
+        local Mped = GetHashKey(config[i]['Model'])
 
-            if dist < Config['Distance'] then
-                sec = 0
-                ShowFloatingHelpNotification(Config['Locales'][Config['Locale']].Text, vector3(v.coords.x, v.coords.y, v.coords.z + 1.0))
-                if IsControlJustPressed(1, Config['KeyPressed']) then
-                    TriggerEvent('mtx_teleportplayer:MenuPoints')
-                end
-            end
-        end
-        Citizen.Wait(sec)
+        exports['qtarget']:AddTargetModel({Mped}, {
+            options = {
+                {
+                    event = 'MenuPoints',
+                    icon = 'fas fa-map-marked-alt',
+                    label = 'Teleport '..Part,
+                }
+            },
+            distance = Config['Distance']
+        })
+
     end
 end)
 
 -- Events
-RegisterNetEvent('mtx_teleportplayer:MenuPoints', function()
-    for k,v in pairs(Config['Points']) do
-        TriggerEvent('nh-context:sendMenu', {
-            {
-                id = v.id,
-                header = v.label,
-                txt = v.txt,
-                params = {
-                    event = 'mtx_teleportplayer:TeleportPlayer',
-                    args = {
-                        ubi = v.coords,
-                        name = v.label,
-                    }
+RegisterNetEvent('MenuPoints') 
+AddEventHandler('MenuPoints', function(data)
+    local MenuZ = {}
+    for k,v in pairs(Config['Zones']) do
+        table.insert(MenuZ, {
+            id = k,
+            header = v['Label'],
+            txt = v['Desc'],
+            params = {
+                event = 'TeleportPlayer',
+                args = {
+                    zone = v['Label'],
+                    coords = v['Coords']
                 }
             }
         })
     end
+    TriggerEvent('nh-context:sendMenu', MenuZ)
 end)
 
-RegisterNetEvent('mtx_teleportplayer:TeleportPlayer')
-AddEventHandler('mtx_teleportplayer:TeleportPlayer', function(data)
-
-    local ped = PlayerPedId()
-
-    if data.ubi ~= nil then
-        SetTimeout(Config['Cooldown'], function()
-            SetEntityCoords(ped, data.ubi.x, data.ubi.y, data.ubi.z, true, true, false, false)
-            ShowNotification(Config['Locales'][Config['Locale']].Notify..data.name)
-        end)
+RegisterNetEvent('TeleportPlayer') 
+AddEventHandler('TeleportPlayer', function(data)
+    if data.coords ~= nil then
+        SetEntityCoords(PlayerPedId(), data.coords.x, data.coords.y, data.coords.z, true, false, false, false)
     end
+end)
 
+RegisterNetEvent('onClientResourceStart')
+AddEventHandler('onClientResourceStart', function(resource)
+    if GetCurrentResourceName() == resource then
+        SpawnPed()
+    end
+end)
+
+RegisterNetEvent('onResourceStop')
+AddEventHandler('onResourceStop', function(resource)
+    if GetCurrentResourceName() == resource then
+        if ped then
+            DeletePed(ped)
+        end
+    end
+end)
+
+RegisterNetEvent('esx:playerLoaded') 
+AddEventHandler('esx:playerLoaded', function(xPlayer, isNew)
+    ESX.PlayerData = xPlayer
+    ESX.PlayerLoaded = true
+end)
+
+RegisterNetEvent('esx:playerLogout') 
+AddEventHandler('esx:playerLogout', function(xPlayer, isNew)
+    ESX.PlayerLoaded = false
+    ESX.PlayerData = {}
+end)
+
+RegisterNetEvent('esx:setJob')
+AddEventHandler('esx:setJob', function(job)
+    ESX.PlayerData.job = job
 end)
 
 -- Functions
-SpawnPed = function()
-    for k,v in pairs(Config['Settings']) do
-        local PED = GetHashKey(v.model)
-        RequestModel(PED)
-        while not HasModelLoaded(PED) do
+function SpawnPed()
+    for k,v in pairs(Config['Main']) do
+        RequestModel(GetHashKey(v['Model']))
+        while not HasModelLoaded(GetHashKey(v['Model'])) do
             Citizen.Wait(1)
         end
     
-        ped = CreatePed(5, PED, v.coords.x, v.coords.y, v.coords.z - 1.0, v.coords.h, false, true)
+        local x, y, z = table.unpack(v['Coords'])
+        ped = CreatePed(5, GetHashKey(v['Model']), x, y, z - 1, v['Heading'], false, true)
         SetEntityAlpha(ped, 255, false)
         FreezeEntityPosition(ped, true) 
         SetEntityInvincible(ped, true) 
-        SetBlockingOfNonTemporaryEvents(ped, true)
-        TaskStartScenarioInPlace(ped, v.anim, false, true)
+        SetBlockingOfNonTemporaryEvents(ped, true) 
     end
-end
-
-ShowFloatingHelpNotification = function(msg, coords)
-	AddTextEntry('FloatingHelpNotification', msg)
-	SetFloatingHelpTextWorldPosition(1, coords)
-	SetFloatingHelpTextStyle(1, 1, 2, -1, 3, 0)
-	BeginTextCommandDisplayHelp('FloatingHelpNotification')
-	EndTextCommandDisplayHelp(2, false, false, -1)
-end
-
-ShowNotification = function(msg)
-    SetNotificationTextEntry('STRING')
-    AddTextComponentString(msg)
-    DrawNotification(0,1)
 end
