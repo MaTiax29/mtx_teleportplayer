@@ -2,16 +2,22 @@ Config = {}
 
 Config['Distance'] = 2.0
 
+Config['Icon'] = 'fas fa-map-marked-alt'
+
 Config['Main'] = {
     {
+        ['Label'] = 'Teleport 1',
         ['Model'] = 'a_m_m_eastsa_02',
-        ['Coords'] = vec3(205.0, -852.5, 30.6),
-        ['Heading'] = 340.0
+        ['Coords'] = vec3(205.0, -852.5, 29.6),
+        ['Heading'] = 340.0,
+        ['ZCoords'] = { ['min'] = 28.6, ['max'] = 31.6 },
     },
     {
+        ['Label'] = 'Teleport 2',
         ['Model'] = 'a_m_m_socenlat_01',
-        ['Coords'] = vec3(433.6, -985.7, 30.7),
-        ['Heading'] = 90.0
+        ['Coords'] = vec3(433.6, -985.7, 29.7),
+        ['Heading'] = 90.0,
+        ['ZCoords'] = { ['min'] = 28.7, ['max'] = 31.7 },
     }
 }
 
