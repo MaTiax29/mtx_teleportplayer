@@ -1,5 +1,7 @@
 # mtx_teleportplayer
 
+Script for FiveM
+
 A simple script that allows you to teleport to any of the locations marked in the configuration file using qtarget and nh-context.
 
 # Requirements
